@@ -143,4 +143,75 @@ print_full_separator(Width, Current) :-
     write('x-'),
     NCurrent is Current+1,
     print_full_separator(Width, NCurrent).
-    
+
+print_vertical_border(Solution, Width, Index) :-
+    Behind is Index-1,
+    nth1(Index, Solution, AtIndex),
+    nth1(Behind, Solution, AtBehind),
+    AtIndex == AtBehind,
+    write(' ').
+print_vertical_border(Solution, Width, Index) :-
+    Behind is Index-1,
+    nth1(Index, Solution, AtIndex),
+    nth1(Behind, Solution, AtBehind),
+    AtIndex \= AtBehind,
+    write('|').
+
+print_solved_line(Board, Width, Solution, Line, Width) :-
+    Index is (Line-1)*Width+Width,
+    print_vertical_border(Solution, Width, Index),
+    nth1(Index, Board, Value),
+    write(Value), write('|'), nl.
+print_solved_line(Board, Width, Solution, Line, 1) :-
+    Index is (Line-1)*Width+1,
+    nth1(Index, Board, Value),
+    write('|'), write(Value),
+    print_solved_line(Board, Width, Solution, Line, 2).
+print_solved_line(Board, Width, Solution, Line, Column) :-
+    Index is (Line-1)*Width+Column,
+    print_vertical_border(Solution, Width, Index),
+    nth1(Index, Board, Value),
+    write(Value),
+    NColumn is Column+1,
+    print_solved_line(Board, Width, Solution, Line, NColumn).
+
+print_horizontal_border(Solution, Width, Line, Column) :-
+    Index is (Line-1)*Width+Column,
+    Below is Index+Width,
+    nth1(Index, Solution, AtIndex),
+    nth1(Below, Solution, AtBelow),
+    AtIndex == AtBelow,
+    write(' ').
+print_horizontal_border(Solution, Width, Line, Column) :-
+    Index is (Line-1)*Width+Column,
+    Below is Index+Width,
+    nth1(Index, Solution, AtIndex),
+    nth1(Below, Solution, AtBelow),
+    AtIndex \= AtBelow,
+    write('-').
+
+print_solved_separator(Solution, Width, Line, Width) :-
+    write('x'),
+    print_horizontal_border(Solution, Width, Line, Width),
+    write('x'), nl.
+print_solved_separator(Solution, Width, Line, Column) :-
+    write('x'),
+    print_horizontal_border(Solution, Width, Line, Column),
+    NColumn is Column+1,
+    print_solved_separator(Solution, Width, Line, NColumn).
+
+print_solved_lines(Board, Width, Solution, Line) :-
+    length(Board, Length),
+    NumberOfLines is Length//Width,
+    Line == NumberOfLines,
+    print_solved_line(Board, Width, Solution, Line, 1).
+print_solved_lines(Board, Width, Solution, Line) :-
+    print_solved_line(Board, Width, Solution, Line, 1),
+    print_solved_separator(Solution, Width, Line, 1),
+    NLine is Line+1,
+    print_solved_lines(Board, Width, Solution, NLine).
+
+print_solved_board(Board, Width, Solution) :-
+    print_full_separator(Width, 1),
+    print_solved_lines(Board, Width, Solution, 1),
+    print_full_separator(Width, 1).
