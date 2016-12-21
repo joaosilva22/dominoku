@@ -21,8 +21,10 @@ peca(15, [4, 4]).
 % Tabuleiros: board(BoardId, Board)
 board(1, [0, 0, 1, 0, 2, 0]). % 3x2
 board(2, [2, 0, 0, 3, 1, 0, 0, 0, 0, 1, 1, 4]). % 4x3
-board(3, [0, 3, 0, 2, 4, 0, 0, 4, 0, 1, 3, 1, 0, 2, 2, 1, 1, 1, 1, 2]). % 5x4
-board(4, [2, 0, 0, 2, 2, 3, 2, 0, 1, 1, 0, 0, 1, 1, 4, 4, 4, 3, 2, 1, 3, 2, 3, 3, 1, 0, 3, 4, 4, 4]). % 6x5
+board(3, [0, 0, 4, 0, 2, 1, 1, 0, 1, 2, 0, 3, 1, 3, 0, 1]). % 4x4
+board(4, [0, 3, 0, 2, 4, 0, 0, 4, 0, 1, 3, 1, 0, 2, 2, 1, 1, 1, 1, 2]). % 5x4
+board(5, [3, 1, 2, 2, 4, 1, 1, 2, 0, 2, 0, 0, 2, 4, 0, 1, 3, 2, 4, 0, 1, 1, 3, 0]). % 6x4
+board(6, [2, 0, 0, 2, 2, 3, 2, 0, 1, 1, 0, 0, 1, 1, 4, 4, 4, 3, 2, 1, 3, 2, 3, 3, 1, 0, 3, 4, 4, 4]). % 6x5
 
 % getAdjacent: devolve uma celula adjacente a celula em index
 % Indices começam a 1
@@ -169,13 +171,13 @@ print_full_separator(Width, Current) :-
     print_full_separator(Width, NCurrent).
 
 % print_vertical_border: imprime a borda vertical entre duas pecas
-print_vertical_border(Solution, Width, Index) :-
+print_vertical_border(Solution, Index) :-
     Behind is Index-1,
     nth1(Index, Solution, AtIndex),
     nth1(Behind, Solution, AtBehind),
     AtIndex == AtBehind,
     write(' ').
-print_vertical_border(Solution, Width, Index) :-
+print_vertical_border(Solution, Index) :-
     Behind is Index-1,
     nth1(Index, Solution, AtIndex),
     nth1(Behind, Solution, AtBehind),
@@ -185,7 +187,7 @@ print_vertical_border(Solution, Width, Index) :-
 % print_solved_line: imprime uma linha do tabuleiro resolvido
 print_solved_line(Board, Width, Solution, Line, Width) :-
     Index is (Line-1)*Width+Width,
-    print_vertical_border(Solution, Width, Index),
+    print_vertical_border(Solution, Index),
     nth1(Index, Board, Value),
     write(Value), write('|'), nl.
 print_solved_line(Board, Width, Solution, Line, 1) :-
@@ -195,7 +197,7 @@ print_solved_line(Board, Width, Solution, Line, 1) :-
     print_solved_line(Board, Width, Solution, Line, 2).
 print_solved_line(Board, Width, Solution, Line, Column) :-
     Index is (Line-1)*Width+Column,
-    print_vertical_border(Solution, Width, Index),
+    print_vertical_border(Solution, Index),
     nth1(Index, Board, Value),
     write(Value),
     NColumn is Column+1,
@@ -264,20 +266,36 @@ get_solution(2) :-
     solve_dominoku(2, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12], 4),
     write('Solucao:\n'),
     print_solved_board(Board, 4, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12]).
-% Tabuleiro de 5x4
+% Tabuleiro de 4x4
 get_solution(3) :-
     board(3, Board),
     write('Tabuleiro inicial:\n'),
-    print_board(Board, 5),
-    solve_dominoku(3, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18,S19,S20], 5),
+    print_board(Board, 4),
+    solve_dominoku(3, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16], 4),
     write('Solucao:\n'),
-    print_solved_board(Board, 5, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18,S19,S20]).
-% Tabuleiro de 6x5
+    print_solved_board(Board, 4, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16]).
+% Tabuleiro de 5x4
 get_solution(4) :-
     board(4, Board),
     write('Tabuleiro inicial:\n'),
+    print_board(Board, 5),
+    solve_dominoku(4, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18,S19,S20], 5),
+    write('Solucao:\n'),
+    print_solved_board(Board, 5, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18,S19,S20]).
+% Tabuleiro de 6x4
+get_solution(5) :-
+    board(5, Board),
+    write('Tabuleiro inicial:\n'),
+    print_board(Board, 5),
+    solve_dominoku(5, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18,S19,S20,S21,S22,S23,S24], 6),
+    write('Solucao:\n'),
+    print_solved_board(Board, 6, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18,S19,S20,S21,S22,S23,S24]).
+% Tabuleiro de 6x5
+get_solution(6) :-
+    board(6, Board),
+    write('Tabuleiro inicial:\n'),
     print_board(Board, 6),
-    solve_dominoku(4, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18,S19,S20,S21,S22,S23,S24,S25,S26,S27,S28,S29,S30], 6),
+    solve_dominoku(6, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18,S19,S20,S21,S22,S23,S24,S25,S26,S27,S28,S29,S30], 6),
     write('Solucao:\n'),
     print_solved_board(Board, 6, [S1,S2,S3,S4,S5,S6,S7,S8,S9,S10,S11,S12,S13,S14,S15,S16,S17,S18,S19,S20,S21,S22,S23,S24,S25,S26,S27,S28,S29,S30]).
 
@@ -286,7 +304,9 @@ start :-
     write('Tamanho do tabuleiro a resolver:\n'),
     write('1 - 3x2\n'),
     write('2 - 4x3\n'),
-    write('3 - 5x4\n'),
-    write('4 - 6x5\n'),
+    write('3 - 4x4\n'),
+    write('4 - 5x4\n'),
+    write('5 - 6x4\n'),
+    write('6 - 6x5\n'),
     read(Choice),
     get_solution(Choice).
